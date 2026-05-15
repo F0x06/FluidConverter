@@ -1,0 +1,15 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "fluidconverter:block/side_input",
+    "0": "fluidconverter:block/side_input"
+  },
+  "elements": [
+    { "from": [5, 16, 5], "to": [11, 16.01, 11], "faces": { "up":    { "uv": [5, 5, 11, 11], "texture": "#0", "cullface": "up" } } },
+    { "from": [5, -0.01, 5], "to": [11, 0, 11], "faces": { "down":  { "uv": [5, 5, 11, 11], "texture": "#0", "cullface": "down" } } },
+    { "from": [5, 5, -0.01], "to": [11, 11, 0], "faces": { "north": { "uv": [5, 5, 11, 11], "texture": "#0", "cullface": "north" } } },
+    { "from": [5, 5, 16], "to": [11, 11, 16.01], "faces": { "south": { "uv": [5, 5, 11, 11], "texture": "#0", "cullface": "south" } } },
+    { "from": [-0.01, 5, 5], "to": [0, 11, 11], "faces": { "west":  { "uv": [5, 5, 11, 11], "texture": "#0", "cullface": "west" } } },
+    { "from": [16, 5, 5], "to": [16.01, 11, 11], "faces": { "east":  { "uv": [5, 5, 11, 11], "texture": "#0", "cullface": "east" } } }
+  ]
+}

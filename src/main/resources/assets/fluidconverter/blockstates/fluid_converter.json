@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "fluidconverter:block/fluid_converter" }
+  }
+}
