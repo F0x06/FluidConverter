@@ -1,3 +1,5 @@
+![Fluid Converter](banner.jpg)
+
 # Fluid Converter
 
 A small NeoForge mod that adds one block: a machine that converts one fluid into another.
