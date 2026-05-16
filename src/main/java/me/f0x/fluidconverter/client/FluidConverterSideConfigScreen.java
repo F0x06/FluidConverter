@@ -23,7 +23,20 @@ import java.util.List;
 public class FluidConverterSideConfigScreen extends AbstractContainerScreen<FluidConverterSideConfigMenu> {
 
     private static final ResourceLocation BG = ResourceLocation.fromNamespaceAndPath(
-            FluidConverter.MODID, "textures/gui/fluid_converter.png");
+            FluidConverter.MODID, "textures/gui/fluid_converter_sides.png");
+
+    private static final ResourceLocation SPR_FACE_NONE         = sprite("face_none");
+    private static final ResourceLocation SPR_FACE_NONE_HOVER   = sprite("face_none_hover");
+    private static final ResourceLocation SPR_FACE_INPUT        = sprite("face_input");
+    private static final ResourceLocation SPR_FACE_INPUT_HOVER  = sprite("face_input_hover");
+    private static final ResourceLocation SPR_FACE_OUTPUT       = sprite("face_output");
+    private static final ResourceLocation SPR_FACE_OUTPUT_HOVER = sprite("face_output_hover");
+    private static final ResourceLocation SPR_ICON              = sprite("icon_button");
+    private static final ResourceLocation SPR_ICON_HOVER        = sprite("icon_button_hover");
+
+    private static ResourceLocation sprite(String name) {
+        return ResourceLocation.fromNamespaceAndPath(FluidConverter.MODID, "sides/" + name);
+    }
 
     private static final int FACE_SIZE = 20;
     private static final int FACE_GAP = 2;
@@ -96,19 +109,6 @@ public class FluidConverterSideConfigScreen extends AbstractContainerScreen<Flui
     protected void renderBg(@NotNull GuiGraphics g, float partialTick, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         g.blit(BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
-
-        int x = leftPos + 4;
-        int y = topPos + 16;
-        int x2 = leftPos + imageWidth - 4;
-        int y2 = topPos + 98;
-        int fill = 0xFFC6C6C6;
-        int light = 0xFFFFFFFF;
-        int dark  = 0xFF8B8B8B;
-        g.fill(x, y, x2, y2, fill);
-        g.fill(x, y, x2, y + 1, light);
-        g.fill(x, y, x + 1, y2, light);
-        g.fill(x, y2 - 1, x2, y2, dark);
-        g.fill(x2 - 1, y, x2, y2, dark);
     }
 
     @Override
@@ -181,29 +181,17 @@ public class FluidConverterSideConfigScreen extends AbstractContainerScreen<Flui
 
         @Override
         public void renderWidget(@NotNull GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-            int x = this.getX();
-            int y = this.getY();
-            int x2 = x + this.getWidth();
-            int y2 = y + this.getHeight();
             boolean hover = this.isHoveredOrFocused();
-
-            int fill = hover ? 0xFFA0A0A0 : 0xFF8B8B8B;
-            int light = 0xFFFFFFFF;
-            int dark  = 0xFF373737;
-
-            g.fill(x, y, x2, y + 1, light);
-            g.fill(x, y, x + 1, y2, light);
-            g.fill(x, y2 - 1, x2, y2, dark);
-            g.fill(x2 - 1, y, x2, y2, dark);
-            g.fill(x + 1, y + 1, x2 - 1, y2 - 1, fill);
+            g.blitSprite(hover ? SPR_ICON_HOVER : SPR_ICON,
+                    this.getX(), this.getY(), this.getWidth(), this.getHeight());
 
             Component msg = this.getMessage();
             Font font = Minecraft.getInstance().font;
             int textW = font.width(msg);
             int color = hover ? 0xFFFFFFFF : 0xFFE6E6E6;
             g.drawString(font, msg,
-                    x + (this.getWidth() - textW) / 2,
-                    y + (this.getHeight() - font.lineHeight) / 2 + 1,
+                    this.getX() + (this.getWidth() - textW) / 2,
+                    this.getY() + (this.getHeight() - font.lineHeight) / 2 + 1,
                     color, false);
         }
     }
@@ -231,29 +219,19 @@ public class FluidConverterSideConfigScreen extends AbstractContainerScreen<Flui
 
         @Override
         public void renderWidget(@NotNull GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-            int x = this.getX();
-            int y = this.getY();
-            int x2 = x + this.getWidth();
-            int y2 = y + this.getHeight();
             boolean hover = this.isHoveredOrFocused();
-
             SideConfig cfg = menu.blockEntity() == null
                     ? SideConfig.NONE
                     : menu.blockEntity().getSideConfig(dir);
 
-            int fill = switch (cfg) {
-                case NONE -> hover ? 0xFF8B8B8B : 0xFF6E6E6E;
-                case INPUT -> hover ? 0xFF3A8FB8 : 0xFF2E7298;
-                case OUTPUT -> hover ? 0xFFC89A3A : 0xFFA67B2A;
+            ResourceLocation sprite = switch (cfg) {
+                case NONE   -> hover ? SPR_FACE_NONE_HOVER   : SPR_FACE_NONE;
+                case INPUT  -> hover ? SPR_FACE_INPUT_HOVER  : SPR_FACE_INPUT;
+                case OUTPUT -> hover ? SPR_FACE_OUTPUT_HOVER : SPR_FACE_OUTPUT;
             };
-            int light = 0xFFFFFFFF;
-            int dark  = 0xFF373737;
-
-            g.fill(x, y, x2, y + 1, light);
-            g.fill(x, y, x + 1, y2, light);
-            g.fill(x, y2 - 1, x2, y2, dark);
-            g.fill(x2 - 1, y, x2, y2, dark);
-            g.fill(x + 1, y + 1, x2 - 1, y2 - 1, fill);
+            int x = this.getX();
+            int y = this.getY();
+            g.blitSprite(sprite, x, y, this.getWidth(), this.getHeight());
 
             Component msg = this.getMessage();
             Font font = Minecraft.getInstance().font;

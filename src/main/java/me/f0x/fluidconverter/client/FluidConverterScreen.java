@@ -32,6 +32,29 @@ public class FluidConverterScreen extends AbstractContainerScreen<FluidConverter
     private static final ResourceLocation BG = ResourceLocation.fromNamespaceAndPath(
             FluidConverter.MODID, "textures/gui/fluid_converter.png");
 
+    private static final ResourceLocation SPR_BUTTON       = mainSprite("button");
+    private static final ResourceLocation SPR_BUTTON_HOVER = mainSprite("button_hover");
+    private static final ResourceLocation SPR_BUTTON_SMALL       = mainSprite("button_small");
+    private static final ResourceLocation SPR_BUTTON_SMALL_HOVER = mainSprite("button_small_hover");
+    private static final ResourceLocation SPR_ICON_SHIELD  = mainSprite("icon_shield");
+    private static final ResourceLocation SPR_ICON_SIDES   = mainSprite("icon_sides");
+    private static final ResourceLocation SPR_REDSTONE_IGNORED  = mainSprite("icon_redstone_ignored");
+    private static final ResourceLocation SPR_REDSTONE_ACTIVE   = mainSprite("icon_redstone_active");
+    private static final ResourceLocation SPR_REDSTONE_INACTIVE = mainSprite("icon_redstone_inactive");
+    private static final ResourceLocation SPR_ICON_PLAY    = mainSprite("icon_play");
+    private static final ResourceLocation SPR_ICON_PAUSE   = mainSprite("icon_pause");
+    private static final ResourceLocation SPR_ICON_DRAIN   = mainSprite("icon_drain");
+    private static final ResourceLocation SPR_ICON_PREV    = mainSprite("icon_prev");
+    private static final ResourceLocation SPR_ICON_NEXT    = mainSprite("icon_next");
+
+    private static ResourceLocation mainSprite(String name) {
+        return ResourceLocation.fromNamespaceAndPath(FluidConverter.MODID, "main/" + name);
+    }
+
+    private static IconDrawer spriteIcon(ResourceLocation sprite) {
+        return (g, x, y, w, h, color) -> g.blitSprite(sprite, x + (w - 8) / 2, y + (h - 8) / 2, 8, 8);
+    }
+
     private static final int TANK_W = 20;
     private static final int TANK_H = 48;
     private static final int TANK_IN_X = 26;
@@ -104,10 +127,9 @@ public class FluidConverterScreen extends AbstractContainerScreen<FluidConverter
         boolean isPaused = menu.blockEntity() != null && menu.blockEntity().isPaused();
         SmallButton pause = new SmallButton(
                 rightX, cornerY, cornerSize, cornerSize,
-                Component.literal(isPaused ? "▶" : "■"),
+                spriteIcon(isPaused ? SPR_ICON_PLAY : SPR_ICON_PAUSE),
                 b -> minecraft.gameMode.handleInventoryButtonClick(
-                        menu.containerId, FluidConverterMenu.BTN_TOGGLE_PAUSE),
-                0.85f);
+                        menu.containerId, FluidConverterMenu.BTN_TOGGLE_PAUSE));
         pause.setTooltip(Tooltip.create(Component.translatable(isPaused
                 ? "gui.fluidconverter.tooltip.resume"
                 : "gui.fluidconverter.tooltip.pause")));
@@ -135,12 +157,14 @@ public class FluidConverterScreen extends AbstractContainerScreen<FluidConverter
                     RedstoneMode m = menu.blockEntity() != null
                             ? menu.blockEntity().getRedstoneMode()
                             : RedstoneMode.IGNORED;
-                    int tint = switch (m) {
-                        case IGNORED -> 0xFF777777;
-                        case ACTIVE_WITH_SIGNAL -> 0xFFE03030;
-                        case ACTIVE_WITHOUT_SIGNAL -> 0xFF802020;
+                    ResourceLocation sprite = switch (m) {
+                        case IGNORED -> SPR_REDSTONE_IGNORED;
+                        case ACTIVE_WITH_SIGNAL -> SPR_REDSTONE_ACTIVE;
+                        case ACTIVE_WITHOUT_SIGNAL -> SPR_REDSTONE_INACTIVE;
                     };
-                    drawRedstoneIcon(g, x, y, w, h, tint);
+                    int sx = x + (w - 8) / 2;
+                    int sy = y + (h - 8) / 2;
+                    g.blitSprite(sprite, sx, sy, 8, 8);
                 },
                 b -> {
                     if (menu.blockEntity() == null) return;
@@ -162,18 +186,16 @@ public class FluidConverterScreen extends AbstractContainerScreen<FluidConverter
         int drainY = topPos + TANKS_Y + TANK_H - drainSize + 2;
         SmallButton drainIn = new SmallButton(
                 leftPos + TANK_IN_X + TANK_W + 4, drainY, drainSize, drainSize,
-                Component.literal("↓"),
+                spriteIcon(SPR_ICON_DRAIN),
                 b -> minecraft.gameMode.handleInventoryButtonClick(
-                        menu.containerId, FluidConverterMenu.BTN_DRAIN_INPUT),
-                0.75f);
+                        menu.containerId, FluidConverterMenu.BTN_DRAIN_INPUT));
         drainIn.setTooltip(Tooltip.create(Component.translatable("gui.fluidconverter.tooltip.drain_input")));
         addRenderableWidget(drainIn);
         SmallButton drainOut = new SmallButton(
                 leftPos + TANK_OUT_X + TANK_W + 4, drainY, drainSize, drainSize,
-                Component.literal("↓"),
+                spriteIcon(SPR_ICON_DRAIN),
                 b -> minecraft.gameMode.handleInventoryButtonClick(
-                        menu.containerId, FluidConverterMenu.BTN_DRAIN_OUTPUT),
-                0.75f);
+                        menu.containerId, FluidConverterMenu.BTN_DRAIN_OUTPUT));
         drainOut.setTooltip(Tooltip.create(Component.translatable("gui.fluidconverter.tooltip.drain_output")));
         addRenderableWidget(drainOut);
 
@@ -181,18 +203,16 @@ public class FluidConverterScreen extends AbstractContainerScreen<FluidConverter
             int y = topPos + RECIPE_TEXT_Y + CHEVRON_Y_OFFSET;
             SmallButton prev = new SmallButton(
                     leftPos + CHEVRON_MARGIN, y, CHEVRON_SIZE, CHEVRON_SIZE,
-                    Component.literal("<"),
+                    spriteIcon(SPR_ICON_PREV),
                     b -> minecraft.gameMode.handleInventoryButtonClick(
-                            menu.containerId, FluidConverterMenu.BTN_PREV_OUTPUT),
-                    0.7f);
+                            menu.containerId, FluidConverterMenu.BTN_PREV_OUTPUT));
             prev.setTooltip(Tooltip.create(Component.translatable("gui.fluidconverter.tooltip.prev_output")));
             addRenderableWidget(prev);
             SmallButton next = new SmallButton(
                     leftPos + imageWidth - CHEVRON_MARGIN - CHEVRON_SIZE, y, CHEVRON_SIZE, CHEVRON_SIZE,
-                    Component.literal(">"),
+                    spriteIcon(SPR_ICON_NEXT),
                     b -> minecraft.gameMode.handleInventoryButtonClick(
-                            menu.containerId, FluidConverterMenu.BTN_NEXT_OUTPUT),
-                    0.7f);
+                            menu.containerId, FluidConverterMenu.BTN_NEXT_OUTPUT));
             next.setTooltip(Tooltip.create(Component.translatable("gui.fluidconverter.tooltip.next_output")));
             addRenderableWidget(next);
         }
@@ -374,32 +394,11 @@ public class FluidConverterScreen extends AbstractContainerScreen<FluidConverter
     }
 
     private static void drawShieldIcon(GuiGraphics g, int x, int y, int w, int h, int color) {
-        int sx = x + (w - 8) / 2;
-        int sy = y + (h - 8) / 2;
-        g.fill(sx + 1, sy + 0, sx + 7, sy + 1, color);
-        g.fill(sx + 0, sy + 1, sx + 8, sy + 4, color);
-        g.fill(sx + 1, sy + 4, sx + 7, sy + 5, color);
-        g.fill(sx + 2, sy + 5, sx + 6, sy + 6, color);
-        g.fill(sx + 3, sy + 6, sx + 5, sy + 7, color);
-    }
-
-    private static void drawRedstoneIcon(GuiGraphics g, int x, int y, int w, int h, int color) {
-        int sx = x + (w - 8) / 2;
-        int sy = y + (h - 8) / 2;
-        int stick = 0xFF6B4226;
-        g.fill(sx + 3, sy + 4, sx + 5, sy + 8, stick);
-        g.fill(sx + 2, sy + 0, sx + 6, sy + 4, color);
-        g.fill(sx + 3, sy + 4, sx + 5, sy + 5, color);
+        g.blitSprite(SPR_ICON_SHIELD, x + (w - 8) / 2, y + (h - 8) / 2, 8, 8);
     }
 
     private static void drawSidesIcon(GuiGraphics g, int x, int y, int w, int h, int color) {
-        int sx = x + (w - 8) / 2;
-        int sy = y + (h - 8) / 2;
-        g.fill(sx + 3, sy + 0, sx + 5, sy + 2, color);
-        g.fill(sx + 0, sy + 3, sx + 2, sy + 5, color);
-        g.fill(sx + 3, sy + 3, sx + 5, sy + 5, color);
-        g.fill(sx + 6, sy + 3, sx + 8, sy + 5, color);
-        g.fill(sx + 3, sy + 6, sx + 5, sy + 8, color);
+        g.blitSprite(SPR_ICON_SIDES, x + (w - 8) / 2, y + (h - 8) / 2, 8, 8);
     }
 
     private static final class SmallButton extends Button {
@@ -422,19 +421,13 @@ public class FluidConverterScreen extends AbstractContainerScreen<FluidConverter
         public void renderWidget(@NotNull GuiGraphics g, int mouseX, int mouseY, float partialTick) {
             int x = this.getX();
             int y = this.getY();
-            int x2 = x + this.getWidth();
-            int y2 = y + this.getHeight();
             boolean hover = this.isHoveredOrFocused();
 
-            int fill = hover ? 0xFFA0A0A0 : 0xFF8B8B8B;
-            int light = 0xFFFFFFFF;
-            int dark  = 0xFF373737;
-
-            g.fill(x, y, x2, y + 1, light);
-            g.fill(x, y, x + 1, y2, light);
-            g.fill(x, y2 - 1, x2, y2, dark);
-            g.fill(x2 - 1, y, x2, y2, dark);
-            g.fill(x + 1, y + 1, x2 - 1, y2 - 1, fill);
+            boolean small = this.getWidth() <= 8 && this.getHeight() <= 8;
+            ResourceLocation bg = small
+                    ? (hover ? SPR_BUTTON_SMALL_HOVER : SPR_BUTTON_SMALL)
+                    : (hover ? SPR_BUTTON_HOVER : SPR_BUTTON);
+            g.blitSprite(bg, x, y, this.getWidth(), this.getHeight());
 
             int color = hover ? 0xFFFFFFFF : 0xFFE6E6E6;
 

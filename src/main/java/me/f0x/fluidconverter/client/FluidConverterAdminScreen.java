@@ -35,6 +35,15 @@ public class FluidConverterAdminScreen extends AbstractContainerScreen<FluidConv
     private static final ResourceLocation BG = ResourceLocation.fromNamespaceAndPath(
             FluidConverter.MODID, "textures/gui/fluid_converter_admin.png");
 
+    private static final ResourceLocation SPR_BUTTON       = sprite("main/button");
+    private static final ResourceLocation SPR_BUTTON_HOVER = sprite("main/button_hover");
+    private static final ResourceLocation SPR_ARROW_TOGGLE       = sprite("admin/arrow_toggle");
+    private static final ResourceLocation SPR_ARROW_TOGGLE_HOVER = sprite("admin/arrow_toggle_hover");
+
+    private static ResourceLocation sprite(String name) {
+        return ResourceLocation.fromNamespaceAndPath(FluidConverter.MODID, name);
+    }
+
     private static final int LIST_X = 8;
     private static final int LIST_W = 152;
     private static final int SCROLLBAR_X_OFFSET_FROM_RIGHT = 14;
@@ -288,19 +297,11 @@ public class FluidConverterAdminScreen extends AbstractContainerScreen<FluidConv
         public void renderWidget(@NotNull GuiGraphics g, int mouseX, int mouseY, float partialTick) {
             int x = this.getX();
             int y = this.getY();
-            int x2 = x + this.getWidth();
-            int y2 = y + this.getHeight();
             boolean hover = this.isHoveredOrFocused();
             boolean reverse = reverseState.getAsBoolean();
 
-            g.fill(x, y, x2, y2, 0xFFC6C6C6);
-            if (hover) {
-                int frame = 0xFF373737;
-                g.fill(x, y, x2, y + 1, frame);
-                g.fill(x, y2 - 1, x2, y2, frame);
-                g.fill(x, y, x + 1, y2, frame);
-                g.fill(x2 - 1, y, x2, y2, frame);
-            }
+            g.blitSprite(hover ? SPR_ARROW_TOGGLE_HOVER : SPR_ARROW_TOGGLE,
+                    x, y, this.getWidth(), this.getHeight());
 
             String glyph = reverse ? "↔" : "→";
             int color = reverse ? 0xFF2266AA : 0xFF555555;
@@ -325,19 +326,10 @@ public class FluidConverterAdminScreen extends AbstractContainerScreen<FluidConv
         public void renderWidget(@NotNull GuiGraphics g, int mouseX, int mouseY, float partialTick) {
             int x = this.getX();
             int y = this.getY();
-            int x2 = x + this.getWidth();
-            int y2 = y + this.getHeight();
             boolean hover = this.isHoveredOrFocused();
 
-            int fill = hover ? 0xFFA0A0A0 : 0xFF8B8B8B;
-            int light = 0xFFFFFFFF;
-            int dark  = 0xFF373737;
-
-            g.fill(x, y, x2, y + 1, light);
-            g.fill(x, y, x + 1, y2, light);
-            g.fill(x, y2 - 1, x2, y2, dark);
-            g.fill(x2 - 1, y, x2, y2, dark);
-            g.fill(x + 1, y + 1, x2 - 1, y2 - 1, fill);
+            g.blitSprite(hover ? SPR_BUTTON_HOVER : SPR_BUTTON,
+                    x, y, this.getWidth(), this.getHeight());
 
             Component msg = this.getMessage();
             Font font = Minecraft.getInstance().font;
