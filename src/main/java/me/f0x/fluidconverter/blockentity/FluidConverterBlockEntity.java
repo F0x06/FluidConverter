@@ -229,7 +229,7 @@ public class FluidConverterBlockEntity extends BlockEntity implements MenuProvid
         return switch (cfg) {
             case INPUT -> new InsertOnly(inputTank);
             case OUTPUT -> new ExtractOnly(outputTank);
-            case NONE -> EMPTY_HANDLER;
+            case NONE -> null;
         };
     }
 
@@ -249,6 +249,19 @@ public class FluidConverterBlockEntity extends BlockEntity implements MenuProvid
         syncToClient();
         if (level != null && !level.isClientSide) {
             invalidateCapabilities();
+            notifyNeighbours();
+        }
+    }
+
+    public void resetAllSides() {
+        for (Direction d : Direction.values()) {
+            sideConfig.put(d, SideConfig.NONE);
+        }
+        setChanged();
+        syncToClient();
+        if (level != null && !level.isClientSide) {
+            invalidateCapabilities();
+            notifyNeighbours();
         }
     }
 
@@ -265,7 +278,13 @@ public class FluidConverterBlockEntity extends BlockEntity implements MenuProvid
         syncToClient();
         if (level != null && !level.isClientSide) {
             invalidateCapabilities();
+            notifyNeighbours();
         }
+    }
+
+    private void notifyNeighbours() {
+        if (level == null) return;
+        level.updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
     }
 
     @Override
@@ -562,16 +581,6 @@ public class FluidConverterBlockEntity extends BlockEntity implements MenuProvid
         @Override public @NotNull FluidStack drain(FluidStack r, FluidAction a) { return tank.drain(r, a); }
         @Override public @NotNull FluidStack drain(int amt, FluidAction a) { return tank.drain(amt, a); }
     }
-
-    private static final IFluidHandler EMPTY_HANDLER = new IFluidHandler() {
-        @Override public int getTanks() { return 0; }
-        @Override public @NotNull FluidStack getFluidInTank(int t) { return FluidStack.EMPTY; }
-        @Override public int getTankCapacity(int t) { return 0; }
-        @Override public boolean isFluidValid(int t, @NotNull FluidStack s) { return false; }
-        @Override public int fill(FluidStack r, FluidAction a) { return 0; }
-        @Override public @NotNull FluidStack drain(FluidStack r, FluidAction a) { return FluidStack.EMPTY; }
-        @Override public @NotNull FluidStack drain(int amt, FluidAction a) { return FluidStack.EMPTY; }
-    };
 
     private record CombinedTanksView(FluidTank in, FluidTank out) implements IFluidHandler {
         @Override public int getTanks() { return 2; }

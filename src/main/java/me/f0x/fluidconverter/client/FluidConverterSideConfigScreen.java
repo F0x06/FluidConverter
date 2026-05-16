@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -49,7 +50,7 @@ public class FluidConverterSideConfigScreen extends AbstractContainerScreen<Flui
     private void rebuildButtons() {
         clearWidgets();
 
-        addRenderableWidget(new BackButton(
+        addRenderableWidget(new IconButton(
                 leftPos + imageWidth - 7 - 12, topPos + 4, 12, 12,
                 Component.literal("←"),
                 b -> {
@@ -57,6 +58,15 @@ public class FluidConverterSideConfigScreen extends AbstractContainerScreen<Flui
                     minecraft.gameMode.handleInventoryButtonClick(
                             menu.containerId, FluidConverterSideConfigMenu.BTN_BACK);
                 }));
+
+        IconButton resetAll = new IconButton(
+                leftPos + 8, topPos + 20, 12, 12,
+                Component.literal("X"),
+                b -> minecraft.gameMode.handleInventoryButtonClick(
+                        menu.containerId, FluidConverterSideConfigMenu.BTN_RESET_ALL));
+        resetAll.setTooltip(Tooltip.create(
+                Component.translatable("gui.fluidconverter.side.tooltip.reset_all")));
+        addRenderableWidget(resetAll);
 
         int cy = topPos + GRID_Y + FACE_SIZE + FACE_GAP;
         int totalW = 4 * FACE_SIZE + 3 * FACE_GAP;
@@ -164,8 +174,8 @@ public class FluidConverterSideConfigScreen extends AbstractContainerScreen<Flui
         };
     }
 
-    private static final class BackButton extends Button {
-        BackButton(int x, int y, int w, int h, Component text, OnPress action) {
+    private static final class IconButton extends Button {
+        IconButton(int x, int y, int w, int h, Component text, OnPress action) {
             super(x, y, w, h, text, action, DEFAULT_NARRATION);
         }
 

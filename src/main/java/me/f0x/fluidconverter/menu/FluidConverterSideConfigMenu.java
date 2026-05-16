@@ -22,6 +22,7 @@ public class FluidConverterSideConfigMenu extends AbstractContainerMenu {
 
     public static final int BTN_BACK = 200;
     public static final int BTN_CYCLE_BASE = 210;
+    public static final int BTN_RESET_ALL = 220;
 
     private final FluidConverterBlockEntity be;
     private final ContainerLevelAccess access;
@@ -57,6 +58,10 @@ public class FluidConverterSideConfigMenu extends AbstractContainerMenu {
         if (be == null) return false;
         if (buttonId == BTN_BACK) {
             player.openMenu(be, be.getBlockPos());
+            return true;
+        }
+        if (buttonId == BTN_RESET_ALL) {
+            be.resetAllSides();
             return true;
         }
         for (Direction d : Direction.values()) {

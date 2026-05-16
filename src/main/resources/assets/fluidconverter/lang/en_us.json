@@ -44,6 +44,7 @@
   "gui.fluidconverter.admin.reverse.off": "One-way (→) — click to switch to reversible",
 
   "gui.fluidconverter.side.tooltip.cycle": "Click to cycle",
+  "gui.fluidconverter.side.tooltip.reset_all": "Reset all sides to disabled",
   "gui.fluidconverter.side.mode.none": "Disabled",
   "gui.fluidconverter.side.mode.input": "Input",
   "gui.fluidconverter.side.mode.output": "Output",
