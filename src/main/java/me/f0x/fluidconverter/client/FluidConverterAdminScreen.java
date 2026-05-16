@@ -74,13 +74,15 @@ public class FluidConverterAdminScreen extends AbstractContainerScreen<FluidConv
     private void rebuildButtons() {
         clearWidgets();
 
-        addRenderableWidget(Button.builder(Component.literal("<"),
-                        b -> {
-                            GuiHelpers.captureCursor();
-                            minecraft.gameMode.handleInventoryButtonClick(
-                                    menu.containerId, FluidConverterAdminMenu.BTN_BACK);
-                        })
-                .bounds(leftPos + imageWidth - 19, topPos + 4, 12, 12).build());
+        addRenderableWidget(new SmallButton(
+                leftPos + imageWidth - 19, topPos + 4, 12, 12,
+                Component.literal("<"),
+                b -> {
+                    GuiHelpers.captureCursor();
+                    minecraft.gameMode.handleInventoryButtonClick(
+                            menu.containerId, FluidConverterAdminMenu.BTN_BACK);
+                },
+                1.0f));
 
         int learnW = 50;
         int learnH = 10;

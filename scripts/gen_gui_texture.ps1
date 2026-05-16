@@ -147,10 +147,10 @@ function MakeFixedButton($path, $size, $fillHex) {
 
 function MakePlayIcon($path, $colorHex) {
     $bmp = StartBitmap 8 8
-    Fill 1 1 2 8 $colorHex
-    Fill 2 2 3 7 $colorHex
-    Fill 3 3 4 6 $colorHex
-    Fill 4 4 5 5 $colorHex
+    Fill 2 0 3 8 $colorHex
+    Fill 3 1 4 7 $colorHex
+    Fill 4 2 5 6 $colorHex
+    Fill 5 3 6 5 $colorHex
     $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
     $script:g.Dispose()
     $bmp.Dispose()
@@ -158,7 +158,7 @@ function MakePlayIcon($path, $colorHex) {
 
 function MakePauseIcon($path, $colorHex) {
     $bmp = StartBitmap 8 8
-    Fill 2 1 4 7 $colorHex
+    Fill 1 1 3 7 $colorHex
     Fill 5 1 7 7 $colorHex
     $bmp.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
     $script:g.Dispose()
